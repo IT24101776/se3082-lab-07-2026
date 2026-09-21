@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
     if (rank == 0)
         for (int i = 0; i < N; i++) array[i] = i + 1;
 
+    double start = MPI_Wtime();
     MPI_Scatter(array, chunk_size, MPI_INT, local_chunk, chunk_size,
                 MPI_INT, 0, MPI_COMM_WORLD);
     long long local_sum = 0;
@@ -43,6 +44,7 @@ int main(int argc, char **argv) {
         printf("[Scan] Final prefix sum = %lld\n", prefix_sum);
         printf("[Scan] Expected total = %lld\n", expected_total);
         printf("[Scan] Correct? = %s\n", prefix_sum == expected_total ? "YES" : "NO");
+        printf("[Scan] Time = %.6f sec\n", MPI_Wtime() - start);
     }
 
     free(array);
